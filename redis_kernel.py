@@ -34,6 +34,7 @@ class RedisKernel(Kernel):
 					sock.setsockopt(socket.IPPROTO_TCP,socket.TCP_NODELAY,1)
 					sock.connect(address)
 					self.redis_socket = sock
+					return
 				except:
 					if sock is not None:
 						sock.close()
@@ -41,7 +42,6 @@ class RedisKernel(Kernel):
 	#the core of the kernel where the work happens
 	def do_execute(self, code, silent, store_history=True, user_expressions=None,
 					   allow_stdin=False):
-		
 		data = ''
 		try:
 			self.redis_socket.send(code)
