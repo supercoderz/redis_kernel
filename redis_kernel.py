@@ -27,20 +27,28 @@ class RedisKernel(Kernel):
 		
 	def start_redis(self):
 		if self.redis_socket is None:
-			self.redis_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-			self.redis_socket.connect(('localhost',6379))
+			for res in socket.getaddrinfo('localhost',6379):
+				try:
+					family,stype,protocol,name,address = res
+					sock = socket.socket(family,stype,protocol)
+					sock.setsockopt(socket.IPPROTO_TCP,socket.TCP_NODELAY,1)
+					sock.connect(address)
+					self.redis_socket = sock
+				except:
+					if sock is not None:
+						sock.close()
 	
 	#the core of the kernel where the work happens
 	def do_execute(self, code, silent, store_history=True, user_expressions=None,
 					   allow_stdin=False):
 		
 		data = ''
-		print code
 		try:
 			self.redis_socket.send(code)
 			data = self.redis_socket.recv(1024)
 		except:
-			pass
+			print sys.exc_info()[0]
+		
 		#if you want to send output
 		if not silent:
 			#create the output here
@@ -53,8 +61,11 @@ class RedisKernel(Kernel):
 				'execution_count': self.execution_count,
 				'payload': [],
 				'user_expressions': {},
-			   }
-			   
+			}
+
+	def do_shutdown(restart):
+		self.redis_socket.close()
+		
 if __name__ == '__main__':
 	from IPython.kernel.zmq.kernelapp import IPKernelApp
 	IPKernelApp.launch_instance(kernel_class=RedisKernel)
