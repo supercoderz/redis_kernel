@@ -47,7 +47,8 @@ class RedisKernel(Kernel):
 			self.redis_socket.send(code)
 			data = self.redis_socket.recv(1024)
 		except:
-			print sys.exc_info()[0]
+			#print sys.exc_info()[0]
+			pass
 		
 		#if you want to send output
 		if not silent:
@@ -64,7 +65,11 @@ class RedisKernel(Kernel):
 			}
 
 	def do_shutdown(restart):
-		self.redis_socket.close()
+		if self.redis_socket is not None:
+			try:
+				self.redis_socket.close()
+			except:
+				pass
 		
 if __name__ == '__main__':
 	from IPython.kernel.zmq.kernelapp import IPKernelApp
