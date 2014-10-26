@@ -10,7 +10,7 @@ or::
 
     easy_install redis_kernel
 
-To test it, install with ``setup.py``, then::
+To test it, install and then::
 
     ipython qtconsole --kernel redis
 

@@ -1,2 +1,5 @@
+#main requirements
 ipython
+
+#useful for testing
 redis

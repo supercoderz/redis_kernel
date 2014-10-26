@@ -2,6 +2,7 @@ from IPython.kernel.zmq.kernelbase import Kernel
 import socket
 
 try:
+	#check if we have defined these variables, if not default
 	from redis_kernel_config import *
 	if 'PORT' not in locals() and 'PORT' not in globals():
 		PORT = None
@@ -9,6 +10,7 @@ try:
 		HOST = None
 	print HOST , PORT
 except:
+	#if the config isnt found at all
 	HOST = None
 	PORT = None
 
@@ -40,6 +42,7 @@ class RedisKernel(Kernel):
 		if self.redis_socket is None:
 			host = HOST or 'localhost'
 			port = PORT or 6379 
+			#loop through all connection options
 			for res in socket.getaddrinfo(host,port):
 				try:
 					family,stype,protocol,name,address = res
@@ -47,6 +50,7 @@ class RedisKernel(Kernel):
 					sock.setsockopt(socket.IPPROTO_TCP,socket.TCP_NODELAY,1)
 					sock.connect(address)
 					self.redis_socket = sock
+					#and return on the first successful one
 					return
 				except:
 					if sock is not None:
@@ -57,6 +61,7 @@ class RedisKernel(Kernel):
 					   allow_stdin=False):
 		data = ''
 		try:
+			#execute the code and get the result
 			self.redis_socket.send(code)
 			data = self.redis_socket.recv(1024)
 		except:
