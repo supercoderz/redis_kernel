@@ -1,6 +1,17 @@
 from IPython.kernel.zmq.kernelbase import Kernel
 import socket
 
+try:
+	from redis_kernel_config import *
+	if 'PORT' not in locals() and 'PORT' not in globals():
+		PORT = None
+	if 'HOST' not in locals() and 'HOST' not in globals():
+		HOST = None
+	print HOST , PORT
+except:
+	HOST = None
+	PORT = None
+
 class RedisKernel(Kernel):
 	#these are required for the kernel to identify itself
 	implementation = 'redis_kernel'
@@ -23,11 +34,13 @@ class RedisKernel(Kernel):
 	#handle all init logic here
 	def __init__(self,**kwargs):
 		Kernel.__init__(self,**kwargs)
-		self.start_redis()
+		self.start_redis(**kwargs)
 		
-	def start_redis(self):
+	def start_redis(self,**kwargs):
 		if self.redis_socket is None:
-			for res in socket.getaddrinfo('localhost',6379):
+			host = HOST or 'localhost'
+			port = PORT or 6379 
+			for res in socket.getaddrinfo(host,port):
 				try:
 					family,stype,protocol,name,address = res
 					sock = socket.socket(family,stype,protocol)
@@ -73,4 +86,4 @@ class RedisKernel(Kernel):
 		
 if __name__ == '__main__':
 	from IPython.kernel.zmq.kernelapp import IPKernelApp
-	IPKernelApp.launch_instance(kernel_class=RedisKernel)
+	IPKernelApp.launch_instance(kernel_class=RedisKernel,host='localhost')
