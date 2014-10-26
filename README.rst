@@ -2,6 +2,14 @@ A simple IPython kernel for redis
 
 This requires IPython 3, which is not yet released.
 
+To install please use
+
+    pip install redis_kernel
+	
+or
+
+    easy_install redis_kernel
+
 To test it, install with ``setup.py``, then::
 
     ipython qtconsole --kernel redis
