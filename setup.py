@@ -3,11 +3,12 @@ from distutils.command.install import install
 import json
 import os.path
 import sys
+from redis_kernel.constants import *
 
-kernel_json = {"argv":[sys.executable,"-m","redis_kernel", "-f", "{connection_file}"],
- "display_name":"Redis",
- "language":"redis",
- "codemirror_mode":"shell"
+kernel_json = {"argv":[sys.executable,"-m", NAME, "-f", "{connection_file}"],
+ "display_name": DISPLAY_NAME,
+ "language": LANGUAGE,
+ "codemirror_mode": "shell"
 }
 
 class install_with_kernelspec(install):
@@ -18,7 +19,7 @@ class install_with_kernelspec(install):
 		# Now write the kernelspec
 		from IPython.kernel.kernelspec import KernelSpecManager
 		from IPython.utils.path import ensure_dir_exists
-		destdir = os.path.join(KernelSpecManager().user_kernel_dir, 'redis')
+		destdir = os.path.join(KernelSpecManager().user_kernel_dir, LANGUAGE)
 		ensure_dir_exists(destdir)
 		with open(os.path.join(destdir, 'kernel.json'), 'w') as f:
 			json.dump(kernel_json, f, sort_keys=True)
@@ -33,19 +34,20 @@ if svem_flag in sys.argv:
 	# Die, setuptools, die.
 	sys.argv.remove(svem_flag)
 
-setup(name='redis_kernel',
-	  version='0.1',
-	  description='A redis kernel for IPython',
+setup(name = NAME,
+	  version = VERSION,
+	  description= DESCRIPTION,
 	  long_description=readme,
 	  author='Narahari Allamraju',
 	  author_email='anarahari@gmail.com',
 	  url='https://github.com/supercoderz/redis_kernel',
-	  py_modules=['redis_kernel'],
+	  py_modules=[ NAME ],
 	  cmdclass={'install': install_with_kernelspec},
 	  install_requires=[],
 	  classifiers = [
 		  'Framework :: IPython',
-		  'License :: OSI Approved :: BSD License',
+		  'Programming Language :: Python :: 2.7',
+		  'Programming Language :: Python :: 3.4',
 		  'Programming Language :: Python :: 3',
 		  'Topic :: System :: Shells',
 	  ]

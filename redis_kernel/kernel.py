@@ -1,6 +1,7 @@
 from IPython.kernel.zmq.kernelbase import Kernel
 import socket
-from redis_parser import RedisParser
+from .parser import RedisParser
+from .constants import *
 import sys
 
 try:
@@ -10,7 +11,7 @@ try:
 		PORT = None
 	if 'HOST' not in locals() and 'HOST' not in globals():
 		HOST = None
-	print HOST , PORT
+	#print HOST , PORT
 except:
 	#if the config isnt found at all
 	HOST = None
@@ -18,9 +19,9 @@ except:
 
 class RedisKernel(Kernel):
 	#these are required for the kernel to identify itself
-	implementation = 'redis_kernel'
-	implementation_version = '0.1'
-	language = 'redis'		  
+	implementation = NAME
+	implementation_version = VERSION
+	language = LANGUAGE		  
 
 	#the database connection
 	redis_socket = None
@@ -28,11 +29,11 @@ class RedisKernel(Kernel):
 	#required for the kernel
 	@property
 	def language_version(self):
-		return '0.1'
+		return VERSION
 
 	@property
 	def banner(self):
-		return 'redis kernel 0.1'
+		return BANNER
 	
 	
 	#handle all init logic here
@@ -42,8 +43,8 @@ class RedisKernel(Kernel):
 		
 	def start_redis(self,**kwargs):
 		if self.redis_socket is None:
-			host = HOST or 'localhost'
-			port = PORT or 6379 
+			host = HOST or DEFAULT_HOST
+			port = PORT or DEFAULT_PORT 
 			#loop through all connection options
 			for res in socket.getaddrinfo(host,port):
 				try:
@@ -61,7 +62,7 @@ class RedisKernel(Kernel):
 	#the core of the kernel where the work happens
 	def do_execute(self, code, silent, store_history=True, user_expressions=None,
 					   allow_stdin=False):
-		print code
+		#print code
 		data = None
 		try:
 			#execute the code and get the result
@@ -77,8 +78,8 @@ class RedisKernel(Kernel):
 			#create the output here
 			
 			#using display data instead allows to show html
-			stream_content = {'name': 'stdout', 'data':data.response}
-			self.send_response(self.iopub_socket, 'stream', stream_content)
+			#stream_content = {'name': 'stdout', 'data':data.response}
+			#self.send_response(self.iopub_socket, 'stream', stream_content)
 			
 			display_content = {'source':'kernel',
 			'data':{
@@ -105,4 +106,4 @@ class RedisKernel(Kernel):
 		
 if __name__ == '__main__':
 	from IPython.kernel.zmq.kernelapp import IPKernelApp
-	IPKernelApp.launch_instance(kernel_class=RedisKernel,host='localhost')
+	IPKernelApp.launch_instance(kernel_class=RedisKernel)

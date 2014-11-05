@@ -1,0 +1,8 @@
+NAME = 'redis_kernel'
+VERSION = '0.1'
+LANGUAGE = 'redis'
+BANNER = 'redis kernel 0.1'
+DEFAULT_HOST = 'localhost'
+DEFAULT_PORT = 'localhost'
+DISPLAY_NAME = 'Redis'
+DESCRIPTION = 'A redis kernel for IPython'

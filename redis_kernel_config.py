@@ -1,3 +1,5 @@
+#sample config file to set redis host and port
+
 #in the absence of this file, the kernel will default to localhost
 HOST = 'localhost'
 #in the absence of this file, the kernel will default to 6379
