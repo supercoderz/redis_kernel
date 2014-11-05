@@ -3,3 +3,4 @@ ipython
 
 #useful for testing
 redis
+pytest

@@ -12,3 +12,5 @@ sock.send('get a\n')
 data = sock.recv(1024)
 
 print data
+
+print type(data)

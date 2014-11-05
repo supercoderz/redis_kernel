@@ -1,3 +1,9 @@
+redis_kernel
+============
+
+.. image:: https://travis-ci.org/supercoderz/redis_kernel.svg?branch=master
+    :target: https://travis-ci.org/supercoderz/redis_kernel
+
 A simple IPython kernel for redis
 
 This requires IPython 3, which is not yet released.

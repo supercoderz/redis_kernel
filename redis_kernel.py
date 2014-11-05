@@ -1,5 +1,7 @@
 from IPython.kernel.zmq.kernelbase import Kernel
 import socket
+from redis_parser import RedisParser
+import sys
 
 try:
 	#check if we have defined these variables, if not default
@@ -59,11 +61,13 @@ class RedisKernel(Kernel):
 	#the core of the kernel where the work happens
 	def do_execute(self, code, silent, store_history=True, user_expressions=None,
 					   allow_stdin=False):
-		data = ''
+		print code
+		data = None
 		try:
 			#execute the code and get the result
 			self.redis_socket.send(code)
-			data = self.redis_socket.recv(1024)
+			response = self.redis_socket.recv(1024)
+			data = RedisParser(response)
 		except:
 			#print sys.exc_info()[0]
 			pass
@@ -71,8 +75,18 @@ class RedisKernel(Kernel):
 		#if you want to send output
 		if not silent:
 			#create the output here
-			stream_content = {'name': 'stdout', 'data':data}
+			
+			#using display data instead allows to show html
+			stream_content = {'name': 'stdout', 'data':data.response}
 			self.send_response(self.iopub_socket, 'stream', stream_content)
+			
+			display_content = {'source':'kernel',
+			'data':{
+				'text/plain':data._repr_text_(),
+				'text/html':data._repr_html_()
+			}}
+			
+			self.send_response(self.iopub_socket, 'display_data', display_content)
 
 		#must return this always
 		return {'status': 'ok',
