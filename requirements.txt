@@ -1,5 +1,5 @@
 #main requirements
-ipython
+https://github.com/ipython/ipython/archive/master.zip
 pyzmq
 
 #useful for testing
