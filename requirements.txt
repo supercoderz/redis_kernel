@@ -1,5 +1,6 @@
 #main requirements
 ipython
+pyzmq
 
 #useful for testing
 redis

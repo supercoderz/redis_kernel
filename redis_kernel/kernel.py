@@ -62,6 +62,8 @@ class RedisKernel(Kernel):
 	#the core of the kernel where the work happens
 	def do_execute(self, code, silent, store_history=True, user_expressions=None,
 					   allow_stdin=False):
+		#check and fix CRLF before we do anything
+		code = self.validate_and_fix_code_crlf(code)
 		#print code
 		data = None
 		try:
@@ -103,7 +105,8 @@ class RedisKernel(Kernel):
 				self.redis_socket.close()
 			except:
 				pass
-		
-if __name__ == '__main__':
-	from IPython.kernel.zmq.kernelapp import IPKernelApp
-	IPKernelApp.launch_instance(kernel_class=RedisKernel)
+	
+	def validate_and_fix_code_crlf(self,code):
+		if not (code [-2:] == '\r\n'):
+			code = code + '\r\n'
+		return code
