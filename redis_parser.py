@@ -43,10 +43,10 @@ class RedisParser(object):
 			out = '<p>['+', '.join(self.result)+']</p>'
 		else:
 			out = '<p>'+'\r\n'.join(self.result)+'</p>'
-		return out.encode('unicode-escape')
+		return out.encode('utf-8')
 
 	def _repr_text_(self):
 		if self.is_array:
-			return ('['+', '.join(self.result)+']').encode('unicode-escape')
+			return ('['+', '.join(self.result)+']').encode('utf-8')
 		else:
-			return ('\r\n'.join(self.result)).encode('unicode-escape')
+			return ('\r\n'.join(self.result)).encode('utf-8')
