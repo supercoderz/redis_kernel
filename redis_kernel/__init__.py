@@ -1,1 +1,1 @@
-from kernel import RedisKernel
+from .kernel import RedisKernel

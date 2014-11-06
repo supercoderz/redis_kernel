@@ -1,4 +1,4 @@
-from redis_parser import *
+from .parser import *
 
 class TestRedisParser(object):
 	def test_create_parser(self):
