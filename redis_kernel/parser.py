@@ -24,6 +24,8 @@ class RedisParser(object):
 			#array count
 			return None
 		elif part[0] in ['-','+',':']:
+			if part[0] == '-':
+				self.is_error = True
 			#error or string or integer
 			return part[1:]
 		elif part[0] == '$':
@@ -41,6 +43,8 @@ class RedisParser(object):
 		out = None
 		if self.is_array:
 			out = '<p>['+', '.join(self.result)+']</p>'
+		elif self.is_error:
+			out = "<p style='color:red'>"+'\r\n'.join(self.result)+'</p>'
 		else:
 			out = '<p>'+'\r\n'.join(self.result)+'</p>'
 		return out.encode('utf-8')
