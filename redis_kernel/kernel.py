@@ -25,6 +25,7 @@ class RedisKernel(Kernel):
 
 	#the database connection
 	redis_socket = None
+	connected = False
 	
 	#required for the kernel
 	@property
@@ -53,15 +54,39 @@ class RedisKernel(Kernel):
 					sock.setsockopt(socket.IPPROTO_TCP,socket.TCP_NODELAY,1)
 					sock.connect(address)
 					self.redis_socket = sock
+					self.connected = True
 					#and return on the first successful one
 					return
 				except:
+					self.connected = False
 					if sock is not None:
 						sock.close()
 	
 	#the core of the kernel where the work happens
 	def do_execute(self, code, silent, store_history=True, user_expressions=None,
 					   allow_stdin=False):
+		if not code.strip():
+			#we got blank code
+			return {'status': 'ok',
+					# The base class increments the execution count
+					'execution_count': self.execution_count,
+					'payload': [],
+					'user_expressions': {},
+				}
+		
+		if not self.connected:
+			#we are not connected
+			return {'status': 'error',
+					'ename': '',
+					'error': 'Unable to connect to Redis server. Check that the server is running.',
+					'traceback': ['Unable to connect to Redis server. Check that the server is running.'],
+					# The base class increments the execution count
+					'execution_count': self.execution_count,
+					'payload': [],
+					'user_expressions': {},
+				}
+			
+		
 		#check and fix CRLF before we do anything
 		code = self.validate_and_fix_code_crlf(code)
 		#print code
