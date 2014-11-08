@@ -17,7 +17,7 @@ class TestRedisParser(object):
 	def test_parse_error(self):
 		out = RedisParser('-Error\r\n')
 		assert out._repr_text_() == "'Error'".encode('utf-8')
-		assert out._repr_html_() == "<p>'Error'</p>".encode('utf-8')
+		assert out._repr_html_() == "<p style='color:red'>'Error'</p>".encode('utf-8')
 
 	def test_parse_integer(self):
 		out = RedisParser(':1000\r\n')
