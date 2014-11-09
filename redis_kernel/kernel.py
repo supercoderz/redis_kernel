@@ -105,7 +105,7 @@ class RedisKernel(Kernel):
 			#create the output here
 			
 			#using display data instead allows to show html
-			#stream_content = {'name': 'stdout', 'data':data.response}
+			#stream_content = {'name': 'stdout', 'text':data._repr_text_()}
 			#self.send_response(self.iopub_socket, 'stream', stream_content)
 			
 			display_content = {
@@ -136,5 +136,5 @@ class RedisKernel(Kernel):
 	
 	def validate_and_fix_code_crlf(self,code):
 		if not (code [-2:] == '\r\n'):
-			code = code + '\r\n'
+			code = code.strip() + '\r\n'
 		return code
