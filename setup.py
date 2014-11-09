@@ -26,9 +26,6 @@ class install_with_kernelspec(install):
 		
 		# TODO: Copy resources once they're specified
 
-with open('README.rst') as f:
-	readme = f.read()
-
 svem_flag = '--single-version-externally-managed'
 if svem_flag in sys.argv:
 	# Die, setuptools, die.
@@ -37,7 +34,7 @@ if svem_flag in sys.argv:
 setup(name = NAME,
 	  version = VERSION,
 	  description= DESCRIPTION,
-	  long_description=readme,
+	  long_description='Please check https://github.com/supercoderz/redis_kernel',
 	  author='Narahari Allamraju',
 	  author_email='anarahari@gmail.com',
 	  url='https://github.com/supercoderz/redis_kernel',

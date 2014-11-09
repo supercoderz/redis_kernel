@@ -108,11 +108,14 @@ class RedisKernel(Kernel):
 			#stream_content = {'name': 'stdout', 'data':data.response}
 			#self.send_response(self.iopub_socket, 'stream', stream_content)
 			
-			display_content = {'source':'kernel',
-			'data':{
-				'text/plain':data._repr_text_(),
-				'text/html':data._repr_html_()
-			}}
+			display_content = {
+				'source':'kernel',
+				'data':{
+					'text/plain':data._repr_text_(),
+					'text/html':data._repr_html_()
+				},'metadata':{}
+			}
+			
 			
 			self.send_response(self.iopub_socket, 'display_data', display_content)
 
