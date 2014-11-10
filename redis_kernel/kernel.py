@@ -97,8 +97,15 @@ class RedisKernel(Kernel):
 			response = self.redis_socket.recv(1024)
 			data = RedisParser(response)
 		except:
-			#print sys.exc_info()[0]
-			pass
+			return {'status': 'error',
+					'ename': '',
+					'error': 'Error executing code '+ str(sys.exc_info()[0]),
+					'traceback': 'Error executing code '+ str(sys.exc_info()[0]),
+					# The base class increments the execution count
+					'execution_count': self.execution_count,
+					'payload': [],
+					'user_expressions': {},
+				}
 		
 		#if you want to send output
 		if not silent:

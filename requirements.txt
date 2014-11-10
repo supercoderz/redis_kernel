@@ -5,3 +5,5 @@ pyzmq
 #useful for testing
 redis
 pytest
+pytest-cov
+mock
