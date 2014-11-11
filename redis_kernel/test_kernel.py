@@ -11,11 +11,42 @@ class TestKernel(object):
 	def test_create_kernel(self):
 		assert RedisKernel() is not None
 
+	def test_misc(self):
+		r = RedisKernel()
+		assert r.banner is not None
+		assert r.language is not None
+		assert r.language_version is not None
+
+	def test_fix_crlf(self):
+		r = RedisKernel()
+		code = r.validate_and_fix_code_crlf('abcd')
+		assert code == 'abcd\r\n'
+	
+	def test_shutdown(self):
+		r = RedisKernel()
+		r.redis_socket = MagicMock(name='socket', spec=socket.socket)
+		r.do_shutdown(False)
+
 	def test_exec_error(self):
 		r = RedisKernel()
 		r.redis_socket = MagicMock(name='socket', spec=socket.socket)
 		r.redis_socket.recv.return_value = None
 		r.connected = True
+		response = r.do_execute('abracadabra',False)
+		assert response['status'] == 'error'
+
+	def test_blank_code_error(self):
+		r = RedisKernel()
+		r.redis_socket = MagicMock(name='socket', spec=socket.socket)
+		r.redis_socket.recv.return_value = None
+		r.connected = True
+		response = r.do_execute('',False)
+		assert response['status'] == 'ok'
+
+	def test_connect_error(self):
+		r = RedisKernel()
+		r.redis_socket = MagicMock(name='socket', spec=socket.socket)
+		r.redis_socket.recv.return_value = None
 		response = r.do_execute('abracadabra',False)
 		assert response['status'] == 'error'
 

@@ -33,3 +33,8 @@ class TestRedisParser(object):
 		out = RedisParser('*2\r\n$5\r\nHello\r\n$2\r\nHi\r\n')
 		assert out._repr_text_() == "['Hello', 'Hi']".encode('utf-8')
 		assert out._repr_html_() == "<p>['Hello', 'Hi']</p>".encode('utf-8')
+
+	def test_parse_nil(self):
+		out = RedisParser('$-1\r\n')
+		assert out._repr_text_() == "'nil'".encode('utf-8')
+		assert out._repr_html_() == "<p>'nil'</p>".encode('utf-8')

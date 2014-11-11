@@ -134,7 +134,7 @@ class RedisKernel(Kernel):
 				'user_expressions': {},
 			}
 
-	def do_shutdown(restart):
+	def do_shutdown(self,restart):
 		if self.redis_socket is not None:
 			try:
 				self.redis_socket.close()
