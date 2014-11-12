@@ -4,7 +4,18 @@ redis_kernel
 .. image:: https://travis-ci.org/supercoderz/redis_kernel.svg?branch=master
     :target: https://travis-ci.org/supercoderz/redis_kernel
 
+.. image:: https://pypip.in/download/redis_kernel/badge.svg
+    :target: https://pypi.python.org/pypi//redis_kernel/
+    :alt: Downloads
 
+.. image:: https://pypip.in/version/redis_kernel/badge.svg
+    :target: https://pypi.python.org/pypi/redis_kernel/
+    :alt: Latest Version
+
+.. image:: https://pypip.in/py_versions/redis_kernel/badge.svg
+    :target: https://pypi.python.org/pypi/redis_kernel/
+    :alt: Supported Python versions
+		
 A simple IPython kernel for redis
 
 This requires IPython 3, which is not yet released.

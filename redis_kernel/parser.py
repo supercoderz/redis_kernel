@@ -1,6 +1,6 @@
 class RedisParser(object):
 	def __init__(self,response):
-		self.response = response
+		self.response = response.encode('utf-8')
 		self.result = []
 		self.is_array = False
 		self.is_error = False
