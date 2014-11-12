@@ -1,6 +1,6 @@
 class RedisParser(object):
 	def __init__(self,response):
-		self.response = response.encode('utf-8')
+		self.response = response
 		self.result = []
 		self.is_array = False
 		self.is_error = False
@@ -47,10 +47,10 @@ class RedisParser(object):
 			out = "<p style='color:red'>"+'\r\n'.join(self.result)+'</p>'
 		else:
 			out = '<p>'+'\r\n'.join(self.result)+'</p>'
-		return out.encode('utf-8')
+		return out
 
 	def _repr_text_(self):
 		if self.is_array:
-			return ('['+', '.join(self.result)+']').encode('utf-8')
+			return ('['+', '.join(self.result)+']')
 		else:
-			return ('\r\n'.join(self.result)).encode('utf-8')
+			return ('\r\n'.join(self.result))

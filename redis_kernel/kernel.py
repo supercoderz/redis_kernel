@@ -93,9 +93,9 @@ class RedisKernel(Kernel):
 		data = None
 		try:
 			#execute the code and get the result
-			self.redis_socket.send(code)
+			self.redis_socket.send(code.encode('utf-8'))
 			response = self.redis_socket.recv(1024)
-			data = RedisParser(response)
+			data = RedisParser(response.decode('utf-8'))
 		except:
 			return {'status': 'error',
 					'ename': '',
