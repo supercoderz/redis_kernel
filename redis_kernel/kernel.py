@@ -41,6 +41,7 @@ class RedisKernel(Kernel):
 	def __init__(self,**kwargs):
 		Kernel.__init__(self,**kwargs)
 		self.start_redis(**kwargs)
+		self.get_commands()
 		
 	def start_redis(self,**kwargs):
 		if self.redis_socket is None:
@@ -61,6 +62,16 @@ class RedisKernel(Kernel):
 					self.connected = False
 					if sock is not None:
 						sock.close()
+	
+	def get_commands(self):
+		if self.connected:
+			try:
+				self.redis_sock.send('command'.encode('utf-8'))
+				response = self.redis_sock.recv(102400)
+				self.commands = RedisParser(response.decode('utf-8'))
+			except:
+				print sys.exc_info()[0]
+				self.commands = []
 	
 	#the core of the kernel where the work happens
 	def do_execute(self, code, silent, store_history=True, user_expressions=None,
@@ -140,6 +151,11 @@ class RedisKernel(Kernel):
 				self.redis_socket.close()
 			except:
 				pass
+	
+	def do_is_complete(self,code):
+		#for now always return true - need to add something here
+		#later if we decide not to send multi to redis immediately
+		return True
 	
 	def validate_and_fix_code_crlf(self,code):
 		if not (code [-2:] == '\r\n'):
