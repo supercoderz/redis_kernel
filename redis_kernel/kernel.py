@@ -80,11 +80,10 @@ class RedisKernel(Kernel):
 	
 	def get_commands(self):
 		if self.connected:
-			self.commands = []
+			self.commands = Redisparser('')
 			try:
 				self.redis_socket.send('command\r\n'.encode('utf-8'))
 				response = self.recv_all()
-				print(response)
 				self.commands = RedisParser(response.decode('utf-8'))
 			except:
 				print(sys.exc_info()[0])
