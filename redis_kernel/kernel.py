@@ -3,7 +3,7 @@ from IPython.kernel.zmq.kernelbase import Kernel
 import socket
 from .parser import RedisParser
 from .constants import *
-import sys
+import sys,traceback
 
 try:
 	#check if we have defined these variables, if not default
@@ -76,17 +76,17 @@ class RedisKernel(Kernel):
 			if data is None:
 				break
 			total_data.append(data)
-		return ''.join(total_data)
+		return ''.encode('utf-8').join(total_data)
 	
 	def get_commands(self):
 		if self.connected:
-			self.commands = Redisparser('')
+			self.commands = RedisParser('')
 			try:
 				self.redis_socket.send('command\r\n'.encode('utf-8'))
 				response = self.recv_all()
 				self.commands = RedisParser(response.decode('utf-8'))
 			except:
-				print(sys.exc_info()[0])
+				traceback.print_tb(sys.exc_info()[2])
 				#self.commands = []
 	
 	#the core of the kernel where the work happens
