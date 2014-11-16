@@ -77,4 +77,8 @@ class TestKernel(object):
 		r.session = MagicMock(name='session', spec=IPython.kernel.zmq.session.Session)
 		response = r.do_execute('keys a*',False)
 		assert response['status'] == 'ok'
+		
+	def test_get_commands(self):
+		r = RedisKernel()
+		assert r.commands.result.__len__() > 0
 	

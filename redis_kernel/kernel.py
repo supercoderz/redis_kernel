@@ -1,3 +1,4 @@
+from __future__ import print_function
 from IPython.kernel.zmq.kernelbase import Kernel
 import socket
 from .parser import RedisParser
@@ -54,6 +55,7 @@ class RedisKernel(Kernel):
 					sock = socket.socket(family,stype,protocol)
 					sock.setsockopt(socket.IPPROTO_TCP,socket.TCP_NODELAY,1)
 					sock.connect(address)
+					sock.settimeout(1)
 					self.redis_socket = sock
 					self.connected = True
 					#and return on the first successful one
@@ -63,15 +65,30 @@ class RedisKernel(Kernel):
 					if sock is not None:
 						sock.close()
 	
+	def recv_all(self):
+		total_data = []
+		while True:
+			try:
+				data = self.redis_socket.recv(1024)
+			except socket.timeout:
+				#sink any timeout here
+				break
+			if data is None:
+				break
+			total_data.append(data)
+		return ''.join(total_data)
+	
 	def get_commands(self):
 		if self.connected:
+			self.commands = []
 			try:
-				self.redis_sock.send('command'.encode('utf-8'))
-				response = self.redis_sock.recv(102400)
+				self.redis_socket.send('command\r\n'.encode('utf-8'))
+				response = self.recv_all()
+				print(response)
 				self.commands = RedisParser(response.decode('utf-8'))
 			except:
-				print sys.exc_info()[0]
-				self.commands = []
+				print(sys.exc_info()[0])
+				#self.commands = []
 	
 	#the core of the kernel where the work happens
 	def do_execute(self, code, silent, store_history=True, user_expressions=None,
