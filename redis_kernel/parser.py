@@ -1,11 +1,23 @@
 class RedisParser(object):
-	def __init__(self,response):
+	def __init__(self,response,commands=False):
 		self.response = response
 		self.result = []
 		self.is_array = False
 		self.is_error = False
-		self.parse_response()
+		if not commands:
+			self.parse_response()
+		else:
+			self.parse_commands()
 
+	def parse_commands(self):
+		#get each section of the command response
+		sections = self.response.split('*6\r\n')
+		for section in sections:
+			parts = section.split('\r\n')
+			#only the first one is the command name
+			command = self.parse_part(parts[0])
+			self.result.append(command)
+	
 	def parse_response(self):
 		#get each line of the response
 		parts = self.response.split('\r\n')

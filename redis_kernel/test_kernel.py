@@ -81,4 +81,3 @@ class TestKernel(object):
 	def test_get_commands(self):
 		r = RedisKernel()
 		assert r.commands.result.__len__() > 0
-	

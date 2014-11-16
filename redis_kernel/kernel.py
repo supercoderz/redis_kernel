@@ -84,8 +84,9 @@ class RedisKernel(Kernel):
 			try:
 				self.redis_socket.send('command\r\n'.encode('utf-8'))
 				response = self.recv_all()
-				self.commands = RedisParser(response.decode('utf-8'))
+				self.commands = RedisParser(response.decode('utf-8'),True)
 			except:
+				print(sys.exc_info()[0])
 				traceback.print_tb(sys.exc_info()[2])
 				#self.commands = []
 	
