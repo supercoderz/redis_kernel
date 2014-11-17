@@ -21,8 +21,8 @@ class TestRedisParser(object):
 
 	def test_parse_integer(self):
 		out = RedisParser(':1000\r\n')
-		assert out._repr_text_() == "'1000'"
-		assert out._repr_html_() == "<p>'1000'</p>"
+		assert out._repr_text_() == '1000'
+		assert out._repr_html_() == "<p>1000</p>"
 
 	def test_parse_bulk_string(self):
 		out = RedisParser('$5\r\nHello\r\n')
@@ -31,8 +31,8 @@ class TestRedisParser(object):
 
 	def test_parse_array(self):
 		out = RedisParser('*2\r\n$5\r\nHello\r\n$2\r\nHi\r\n')
-		assert out._repr_text_() == "['Hello', 'Hi']"
-		assert out._repr_html_() == "<p>['Hello', 'Hi']</p>"
+		assert out._repr_text_() == "'Hello', 'Hi'"
+		assert out._repr_html_() == "<p>'Hello', 'Hi'</p>"
 
 	def test_parse_nil(self):
 		out = RedisParser('$-1\r\n')

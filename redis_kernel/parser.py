@@ -14,9 +14,10 @@ class RedisParser(object):
 		sections = self.response.split('*6\r\n')
 		for section in sections:
 			parts = section.split('\r\n')
-			#only the first one is the command name
-			command = self.parse_part(parts[0])
-			self.result.append(command)
+			#only the second one is the command name
+			#no need to parse for now
+			if parts[1] is not None and parts[1].__len__()>0:
+				self.result.append(parts[1])
 	
 	def parse_response(self):
 		#get each line of the response
@@ -38,8 +39,12 @@ class RedisParser(object):
 		elif part[0] in ['-','+',':']:
 			if part[0] == '-':
 				self.is_error = True
-			#error or string or integer
-			return part[1:]
+				#error or string or integer
+				return part[1:]
+			elif part[0] == '+':
+				return part[1:]
+			elif part[0] == ':':
+				return int(part[1:])
 		elif part[0] == '$':
 			if part[1:]== '-1':
 				#handle nil
@@ -53,16 +58,27 @@ class RedisParser(object):
 	
 	def _repr_html_(self):
 		out = None
-		if self.is_array:
-			out = '<p>['+', '.join(self.result)+']</p>'
-		elif self.is_error:
+		if self.is_error:
 			out = "<p style='color:red'>"+'\r\n'.join(self.result)+'</p>'
 		else:
-			out = '<p>'+'\r\n'.join(self.result)+'</p>'
+			print self.get_result()
+			out = '<p>'+ ','.join(self.get_result())+'</p>'
 		return out
 
 	def _repr_text_(self):
-		if self.is_array:
-			return ('['+', '.join(self.result)+']')
+		return self.get_result()
+
+	def get_result(self):
+		if self.result.__len__()>1:
+			out = []
+			for x in self.result:
+				if type(x)==int:
+					out.append(str(x))
+				else:
+					out.append(x)
+			return out
 		else:
-			return ('\r\n'.join(self.result))
+			if type(self.result[0]==str or type(self.result[0])==unicode):
+				return self.result[0]
+			else:
+				return str(self.result[0])

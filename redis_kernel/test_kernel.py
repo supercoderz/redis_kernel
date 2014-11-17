@@ -81,3 +81,7 @@ class TestKernel(object):
 	def test_get_commands(self):
 		r = RedisKernel()
 		assert r.commands.result.__len__() > 0
+
+	def test_get_command_count(self):
+		r = RedisKernel()
+		assert r.commands.result.__len__() == int(r.command_count._repr_text_())
