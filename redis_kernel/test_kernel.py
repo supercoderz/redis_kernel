@@ -29,11 +29,12 @@ class TestKernel(object):
 	def test_exec_error(self):
 		r = RedisKernel()
 		#dont want this to connect to the real redis server
+		r.session = MagicMock(name='session', spec=IPython.kernel.zmq.session.Session)
 		r.redis_socket = MagicMock(name='socket', spec=socket.socket)
 		r.redis_socket.recv.return_value = None
 		r.connected = True
 		response = r.do_execute('abracadabra',False)
-		assert response['status'] == 'error'
+		assert response['status'] == 'ok'
 
 	def test_blank_code_error(self):
 		r = RedisKernel()
@@ -43,10 +44,11 @@ class TestKernel(object):
 	def test_connect_error(self):
 		r = RedisKernel()
 		#this does not connect to the real redis and the is connected flag is false
+		r.session = MagicMock(name='session', spec=IPython.kernel.zmq.session.Session)
 		r.redis_socket = MagicMock(name='socket', spec=socket.socket)
 		r.redis_socket.recv.return_value = None
 		response = r.do_execute('abracadabra',False)
-		assert response['status'] == 'error'
+		assert response['status'] == 'ok'
 
 	def test_normal_response(self):
 		r = RedisKernel()

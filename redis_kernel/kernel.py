@@ -55,7 +55,8 @@ class RedisKernel(Kernel):
 					sock = socket.socket(family,stype,protocol)
 					sock.setsockopt(socket.IPPROTO_TCP,socket.TCP_NODELAY,1)
 					sock.connect(address)
-					sock.settimeout(1)
+					#just half a second timeout
+					sock.settimeout(0.5)
 					self.redis_socket = sock
 					self.connected = True
 					#and return on the first successful one
@@ -126,7 +127,7 @@ class RedisKernel(Kernel):
 		try:
 			#execute the code and get the result
 			self.redis_socket.send(code.encode('utf-8'))
-			response = self.redis_socket.recv(1024)
+			response = self.recv_all()
 			data = RedisParser(response.decode('utf-8'))
 		except:
 			return {'status': 'error',
@@ -153,8 +154,7 @@ class RedisKernel(Kernel):
 					'text/plain':data._repr_text_(),
 					'text/html':data._repr_html_()
 				},'metadata':{}
-			}
-			
+			}			
 			
 			self.send_response(self.iopub_socket, 'display_data', display_content)
 

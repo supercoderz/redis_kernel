@@ -30,7 +30,7 @@ class RedisParser(object):
 			if part != '':
 				value = self.parse_part(part)
 				if value is not None:
-					self.result.append(repr(value))
+					self.result.append(value)
 	
 	def parse_part(self,part):
 		if part[0] == '*':
@@ -58,17 +58,17 @@ class RedisParser(object):
 	
 	def _repr_html_(self):
 		out = None
+		res = self.get_result()
 		if self.is_error:
-			out = "<p style='color:red'>"+'\r\n'.join(self.result)+'</p>'
+			out = "<p style='color:red'>"+res+'</p>'
 		else:
-			print self.get_result()
-			out = '<p>'+ ','.join(self.get_result())+'</p>'
+			out = res
 		return out
 
 	def _repr_text_(self):
 		return self.get_result()
 
-	def get_result(self):
+	def get_result(self):		
 		if self.result.__len__()>1:
 			out = []
 			for x in self.result:
@@ -77,8 +77,10 @@ class RedisParser(object):
 				else:
 					out.append(x)
 			return out
-		else:
-			if type(self.result[0]==str or type(self.result[0])==unicode):
-				return self.result[0]
-			else:
+		elif self.result.__len__()>0:
+			if type(self.result[0]==int):
 				return str(self.result[0])
+			else:
+				return self.result[0]
+		else:
+			return 'Error executing command. There was no result.'
