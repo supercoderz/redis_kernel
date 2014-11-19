@@ -154,7 +154,7 @@ class RedisKernel(Kernel):
 					'text/plain':data._repr_text_(),
 					'text/html':data._repr_html_()
 				},'metadata':{}
-			}			
+			}
 			
 			self.send_response(self.iopub_socket, 'display_data', display_content)
 
@@ -178,6 +178,20 @@ class RedisKernel(Kernel):
 		#later if we decide not to send multi to redis immediately
 		return True
 	
+	def do_complete(self,code,cursor_pos):
+		options = []
+		for command in self.commands.result:
+			if command.startswith(code):
+				options.append(command)
+
+		return  {
+			'matches':options,
+			'metadata':{},
+			'status':'ok',
+			'cursor_start':cursor_pos,
+			'cursor_end':cursor_pos
+		}
+
 	def validate_and_fix_code_crlf(self,code):
 		if not (code [-2:] == '\r\n'):
 			code = code.strip() + '\r\n'

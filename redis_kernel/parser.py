@@ -83,4 +83,5 @@ class RedisParser(object):
 			else:
 				return self.result[0]
 		else:
+			self.is_error = True
 			return 'Error executing command. There was no result.'
