@@ -22,7 +22,11 @@ class RedisKernel(Kernel):
 	#these are required for the kernel to identify itself
 	implementation = NAME
 	implementation_version = VERSION
-	language = LANGUAGE		  
+	language = LANGUAGE
+	
+	#history
+	history = []
+	results = []
 
 	#the database connection
 	redis_socket = None
@@ -56,7 +60,7 @@ class RedisKernel(Kernel):
 					sock.setsockopt(socket.IPPROTO_TCP,socket.TCP_NODELAY,1)
 					sock.connect(address)
 					#just half a second timeout
-					sock.settimeout(0.5)
+					sock.settimeout(0.25)
 					self.redis_socket = sock
 					self.connected = True
 					#and return on the first successful one
@@ -125,10 +129,14 @@ class RedisKernel(Kernel):
 		#print code
 		data = None
 		try:
+			#record the code executed
+			self.history.append(code)
 			#execute the code and get the result
 			self.redis_socket.send(code.encode('utf-8'))
 			response = self.recv_all()
 			data = RedisParser(response.decode('utf-8'))
+			#record the response
+			self.results.append(data)
 		except:
 			return {'status': 'error',
 					'ename': '',
@@ -190,8 +198,8 @@ class RedisKernel(Kernel):
 			'status':'ok',
 			'cursor_start':cursor_pos,
 			'cursor_end':cursor_pos
-		}
-
+		}	
+	
 	def validate_and_fix_code_crlf(self,code):
 		if not (code [-2:] == '\r\n'):
 			code = code.strip() + '\r\n'
