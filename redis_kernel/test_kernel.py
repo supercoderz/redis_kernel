@@ -104,3 +104,12 @@ class TestKernel(object):
         response = r.do_complete('ge', 2)
         assert response['matches'].__len__() > 0
         assert response['status'] == 'ok'
+
+    def test_tail_history(self):
+        r = RedisKernel()
+        r.session = MagicMock(
+            name='session', spec=IPython.kernel.zmq.session.Session)
+        response = r.do_execute('set a 6', False)
+        assert response['status'] == 'ok'
+        history = r.do_history('tail',True,True)
+        assert history['history'] == [(1,'set a 6','OK')]
