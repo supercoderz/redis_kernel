@@ -221,7 +221,7 @@ class RedisKernel(Kernel):
         if n is None:
             n = self.history.__len__()
         print(n)
-        key_range = self.history.keys()[-n:]
+        key_range = list(self.history.keys())[-n:]
         result = []
         for key in key_range:
             r = (key+1,self.history[key],self.results[key]._repr_text_())
