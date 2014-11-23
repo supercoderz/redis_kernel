@@ -110,6 +110,54 @@ class TestKernel(object):
         r.session = MagicMock(
             name='session', spec=IPython.kernel.zmq.session.Session)
         response = r.do_execute('set a 6', False)
+        r.execution_count += 1
         assert response['status'] == 'ok'
-        history = r.do_history('tail',True,True)
-        assert history['history'] == [(1,'set a 6','OK')]
+        history = r.do_history('tail', True, True)
+        assert history['history'] == [(1, 'set a 6', 'OK')]
+
+    def test_tail_history_partial(self):
+        r = RedisKernel()
+        r.session = MagicMock(
+            name='session', spec=IPython.kernel.zmq.session.Session)
+        response = r.do_execute('set c 6', False)
+        r.execution_count += 1
+        response = r.do_execute('set a 6', False)
+        r.execution_count += 1
+        assert response['status'] == 'ok'
+        history = r.do_history('tail', True, True, n=2)
+        assert history['history'] == [
+            (1, 'set c 6', 'OK'), (2, 'set a 6', 'OK')]
+
+    def test_tail_history_overflow(self):
+        r = RedisKernel()
+        r.session = MagicMock(
+            name='session', spec=IPython.kernel.zmq.session.Session)
+        response = r.do_execute('set a 6', False)
+        r.execution_count += 1
+        assert response['status'] == 'ok'
+        history = r.do_history('tail', True, True, n=3)
+        assert history['history'] == [
+            (1, 'set a 6', 'OK'), (2, 'set a 6', 'OK')]
+
+    def test_range_history(self):
+        r = RedisKernel()
+        r.session = MagicMock(
+            name='session', spec=IPython.kernel.zmq.session.Session)
+        response = r.do_execute('set a 6', False)
+        r.execution_count += 1
+        assert response['status'] == 'ok'
+        history = r.do_history('range', True, True)
+        assert history['history'] == [
+            (1, 'set a 6', 'OK'), (2, 'set a 6', 'OK')]
+
+    def test_range_history_partial(self):
+        r = RedisKernel()
+        r.session = MagicMock(
+            name='session', spec=IPython.kernel.zmq.session.Session)
+        response = r.do_execute('set c 6', False)
+        r.execution_count += 1
+        response = r.do_execute('set a 6', False)
+        r.execution_count += 1
+        assert response['status'] == 'ok'
+        history = r.do_history('range', True, True, start=2, stop=2)
+        assert history['history'] == [(2, 'set a 6', 'OK')]

@@ -73,7 +73,7 @@ class RedisParser(object):
         if self.result.__len__() > 1:
             out = []
             for x in self.result:
-                if type(x) == int:
+                if isinstance(x, int):
                     out.append(str(x))
                 else:
                     out.append(x)

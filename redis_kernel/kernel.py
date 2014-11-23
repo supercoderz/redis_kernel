@@ -204,36 +204,51 @@ class RedisKernel(Kernel):
             'cursor_end': cursor_pos
         }
 
-    def do_history(self,hist_access_type, output, raw, session=None, start=None, stop=None,
-            n=None, pattern=None, unique=False):
+    def do_history(self, hist_access_type, output, raw, session=None, start=None, stop=None,
+                   n=None, pattern=None, unique=False):
         if hist_access_type == 'tail':
-            hist = self.get_tail(n, raw=raw, output=output,include_latest=True)
-        elif hist_access_type == 'range' and start is not None and stop is not None:
-            hist = self.get_range(session, start, stop,raw=raw, output=output)
+            hist = self.get_tail(
+                n,
+                raw=raw,
+                output=output,
+                include_latest=True)
+        elif hist_access_type == 'range':
+            hist = self.get_range(session, start, stop, raw=raw, output=output)
         elif hist_access_type == 'search' and pattern is not None:
-            hist = self.search(pattern, raw=raw, output=output, n=n, unique=unique)
+            hist = self.search(
+                pattern,
+                raw=raw,
+                output=output,
+                n=n,
+                unique=unique)
         else:
             hist = []
 
-        return {'history' : list(hist)}
+        return {'history': list(hist)}
 
-    def get_tail(self,n,raw,output,include_latest):
-        if n is None:
-            n = self.history.__len__()
-        print(n)
+    def get_tail(self, n, raw, output, include_latest):
+        n = n or self.history.__len__()
         key_range = list(self.history.keys())[-n:]
         result = []
         for key in key_range:
-            r = (key+1,self.history[key],self.results[key]._repr_text_())
+            r = (key + 1, self.history[key], self.results[key]._repr_text_())
             result.append(r)
         return result
-        
-    def get_range(self,session,start,stop,raw,output):
+
+    def get_range(self, session, start, stop, raw, output):
+        start = start or 0
+        stop = stop or self.history.__len__()
+        start = start if start == 0 else start - 1
+        key_range = list(self.history.keys())[start:stop]
+        result = []
+        for key in key_range:
+            r = (key + 1, self.history[key], self.results[key]._repr_text_())
+            result.append(r)
+        return result
+
+    def search(self, pattern, raw, output, n, unique):
         pass
-        
-    def search(self,pattern,raw,output,n,unique):
-        pass
-        
+
     def validate_and_fix_code_crlf(self, code):
         if not (code[-2:] == '\r\n'):
             code = code.strip() + '\r\n'
