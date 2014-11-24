@@ -161,3 +161,28 @@ class TestKernel(object):
         assert response['status'] == 'ok'
         history = r.do_history('range', True, True, start=2, stop=2)
         assert history['history'] == [(2, 'set a 6', 'OK')]
+
+    def test_search_history(self):
+        r = RedisKernel()
+        r.session = MagicMock(
+            name='session', spec=IPython.kernel.zmq.session.Session)
+        response = r.do_execute('set a 6', False)
+        r.execution_count += 1
+        response = r.do_execute('get a', False)
+        r.execution_count += 1
+        assert response['status'] == 'ok'
+        history = r.do_history('search', True, True)
+        assert history['history'] == [
+            (1, 'set a 6', 'OK'), (2, 'get a', '6')]
+
+    def test_search_history_pattern(self):
+        r = RedisKernel()
+        r.session = MagicMock(
+            name='session', spec=IPython.kernel.zmq.session.Session)
+        response = r.do_execute('set a 6', False)
+        r.execution_count += 1
+        response = r.do_execute('get a', False)
+        r.execution_count += 1
+        assert response['status'] == 'ok'
+        history = r.do_history('search', True, True,pattern = 'get*')
+        assert history['history'] == [(2, 'get a', '6')]

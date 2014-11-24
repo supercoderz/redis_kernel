@@ -5,6 +5,7 @@ from .parser import RedisParser
 from .constants import *
 import sys
 import traceback
+import re
 
 try:
     # check if we have defined these variables, if not default
@@ -214,7 +215,7 @@ class RedisKernel(Kernel):
                 include_latest=True)
         elif hist_access_type == 'range':
             hist = self.get_range(session, start, stop, raw=raw, output=output)
-        elif hist_access_type == 'search' and pattern is not None:
+        elif hist_access_type == 'search':
             hist = self.search(
                 pattern,
                 raw=raw,
@@ -247,7 +248,13 @@ class RedisKernel(Kernel):
         return result
 
     def search(self, pattern, raw, output, n, unique):
-        pass
+        pattern = pattern or '.*'
+        result = []
+        for key in list(self.history.keys()):
+            if re.search(pattern,self.history[key]):
+                r = (key+1, self.history[key], self.results[key]._repr_text_())
+                result.append(r)
+        return result
 
     def validate_and_fix_code_crlf(self, code):
         if not (code[-2:] == '\r\n'):
