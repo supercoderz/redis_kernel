@@ -6,6 +6,7 @@ from .constants import *
 import sys
 import traceback
 import re
+import sqlite3
 
 try:
     # check if we have defined these variables, if not default
@@ -14,6 +15,8 @@ try:
         PORT = None
     if 'HOST' not in locals() and 'HOST' not in globals():
         HOST = None
+    if 'HISTORY_DB' not in locals() and 'HISTORY_DB' not in globals():
+        HISTORY_DB = None
     # print HOST , PORT
 except:
     # if the config isnt found at all
@@ -30,6 +33,7 @@ class RedisKernel(Kernel):
     # history
     history = {}
     results = {}
+    history_db_ready = False
 
     # the database connection
     redis_socket = None
@@ -49,6 +53,7 @@ class RedisKernel(Kernel):
         Kernel.__init__(self, **kwargs)
         self.start_redis(**kwargs)
         self.get_commands()
+        self.start_history()
 
     def start_redis(self, **kwargs):
         if self.redis_socket is None:
@@ -72,6 +77,17 @@ class RedisKernel(Kernel):
                     if sock is not None:
                         sock.close()
 
+    def start_history(self):
+        db_name = HISTORY_DB or DEFAULT_DB_NAME
+        try:
+            self.history_db  = sqlite3.connect(db_name)
+            c = self.history_db.cursor()
+            c.execute('create table if not exists history (session int, execution_count int, code text, result text)')
+            self.history_db_ready = True
+        except:
+            print(sys.exc_info()[0])
+            traceback.print_tb(sys.exc_info()[2])
+        
     def recv_all(self):
         total_data = []
         while True:
