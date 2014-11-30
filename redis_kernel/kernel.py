@@ -7,6 +7,7 @@ import sys
 import traceback
 import re
 import sqlite3
+import uuid
 
 try:
     # check if we have defined these variables, if not default
@@ -82,12 +83,24 @@ class RedisKernel(Kernel):
         try:
             self.history_db  = sqlite3.connect(db_name)
             c = self.history_db.cursor()
-            c.execute('create table if not exists history (session int, execution_count int, code text, result text)')
+            c.execute('create table if not exists history (session text, execution_count int, code text, result text)')
             self.history_db_ready = True
         except:
             print(sys.exc_info()[0])
             traceback.print_tb(sys.exc_info()[2])
         
+    def record_history(self,session,count,code,data):
+        try:
+            result = data._repr_text_()
+            if type(result)==list:
+                result = str(result)
+            c = self.history_db.cursor()
+            c.execute('insert into history values (?,?,?,?)',(session,count,code,result))
+            self.history_db.commit()
+        except:
+            print(sys.exc_info()[0])
+            traceback.print_tb(sys.exc_info()[2])
+            
     def recv_all(self):
         total_data = []
         while True:
@@ -157,6 +170,7 @@ class RedisKernel(Kernel):
             # record the response
             if store_history:
                 self.results[self.execution_count] = data
+            self.record_history(self.session.session,self.execution_count,code,data)
         except:
             return {'status': 'error',
                     'ename': '',
