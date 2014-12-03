@@ -7,3 +7,4 @@ redis
 pytest
 pytest-cov
 mock
+pyzmq-wrapper

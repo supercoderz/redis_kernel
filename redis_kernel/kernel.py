@@ -170,7 +170,6 @@ class RedisKernel(Kernel):
             # record the response
             if store_history:
                 self.results[self.execution_count] = data
-            print(self.session.session)
             self.record_history(self.session.session,self.execution_count,code,data)
         except:
             return {'status': 'error',
@@ -238,8 +237,6 @@ class RedisKernel(Kernel):
 
     def do_history(self, hist_access_type, output, raw, session=None, start=None, stop=None,
                    n=None, pattern=None, unique=False):
-        print('******')
-        print(session)
         if hist_access_type == 'tail':
             hist = self.get_tail(
                 n,
