@@ -3,7 +3,6 @@ from zmqwrapper import *
 import sys
 
 def print_message(topic,message):
-    print(topic)
     print(message)
 
 def get_data(host,port):
