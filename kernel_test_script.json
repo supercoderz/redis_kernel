@@ -1,0 +1,29 @@
+{
+  "execute":{
+    "test_code":"get a",
+    "comments":"test basic code execution"
+  },
+  "complete":{
+    "test_code":"get",
+    "comments":"test getting command auto complete"
+  },
+  "kernel_info":{
+    "comments":"simple kernel info check"
+  },
+  "single_payload":{
+    "test_code":"get a",
+    "comments":"test one payload"
+  },
+  "history_tail":{
+    "test_code":"get a",
+    "comments":"test tail history"
+  },
+  "history_range":{
+    "test_code":"get a",
+    "comments":"test range history"
+  },
+  "history_search":{
+    "test_code":"get a",
+    "comments":"test search history"
+  }
+}
