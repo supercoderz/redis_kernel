@@ -231,8 +231,8 @@ class RedisKernel(Kernel):
             'matches': options,
             'metadata': {},
             'status': 'ok',
-            'cursor_start': cursor_pos,
-            'cursor_end': cursor_pos
+            'cursor_start': 0,
+            'cursor_end': len(code)
         }
 
     def do_history(self, hist_access_type, output, raw, session=None, start=None, stop=None,
