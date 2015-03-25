@@ -23,6 +23,7 @@ except:
     # if the config isnt found at all
     HOST = None
     PORT = None
+    HISTORY_DB = None
 
 
 class RedisKernel(Kernel):
