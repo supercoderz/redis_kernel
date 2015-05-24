@@ -49,6 +49,13 @@ class RedisKernel(Kernel):
     @property
     def banner(self):
         return BANNER
+        
+    language_info = {
+        'name': NAME,
+        'version': VERSION,
+        'mimetype': 'text',
+        'file_extension': '.txt',
+    }
 
     # handle all init logic here
     def __init__(self, **kwargs):

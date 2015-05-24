@@ -1,5 +1,5 @@
 #main requirements
--e git+https://github.com/ipython/ipython#egg=ipython
+IPython
 pyzmq
 
 #useful for testing
