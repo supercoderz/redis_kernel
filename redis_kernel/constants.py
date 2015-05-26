@@ -1,5 +1,5 @@
 NAME = 'redis_kernel'
-VERSION = '0.5'
+VERSION = '0.5.1'
 LANGUAGE = 'redis'
 BANNER = 'redis kernel 0.5'
 DEFAULT_HOST = 'localhost'
