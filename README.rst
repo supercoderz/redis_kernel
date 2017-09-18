@@ -1,10 +1,10 @@
 redis_kernel
 ============
 
-.. image:: https://img.shields.io/travis/supercoderz/redis_kernel.svg?maxAge=2592000   :target: 
-.. image:: https://img.shields.io/pypi/dw/redis_kernel.svg?maxAge=2592000   :target: 
-.. image:: https://img.shields.io/pypi/v/redis_kernel.svg?maxAge=2592000   :target: 
-.. image:: https://img.shields.io/pypi/pyversions/redis_kernel.svg?maxAge=2592000   :target: 
+.. image:: https://img.shields.io/travis/supercoderz/redis_kernel.svg?maxAge=2592000   :target: https://travis-ci.org/supercoderz/redis_kernel
+.. image:: https://img.shields.io/pypi/dw/redis_kernel.svg?maxAge=2592000   :target: https://pypi.python.org/pypi/redis_kernel
+.. image:: https://img.shields.io/pypi/v/redis_kernel.svg?maxAge=2592000   :target: https://pypi.python.org/pypi/redis_kernel
+.. image:: https://img.shields.io/pypi/pyversions/redis_kernel.svg?maxAge=2592000   :target: https://pypi.python.org/pypi/redis_kernel
 		
 A simple IPython kernel for redis
 
