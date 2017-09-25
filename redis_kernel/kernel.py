@@ -1,5 +1,5 @@
 from __future__ import print_function
-from IPython.kernel.zmq.kernelbase import Kernel
+from ipykernel.kernelbase import Kernel
 import socket
 from .parser import RedisParser
 from .constants import *

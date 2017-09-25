@@ -1,7 +1,7 @@
 #main requirements
 IPython
 pyzmq
-
+jupyter
 #useful for testing
 redis
 pytest

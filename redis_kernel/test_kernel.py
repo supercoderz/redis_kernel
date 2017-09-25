@@ -4,7 +4,7 @@ if sys.version < '3':
     from mock import MagicMock
 else:
     from unittest.mock import MagicMock
-import IPython
+import ipykernel
 
 
 class TestKernel(object):
@@ -31,7 +31,7 @@ class TestKernel(object):
         r = RedisKernel()
         # dont want this to connect to the real redis server
         r.session = MagicMock(
-            name='session', spec=IPython.kernel.zmq.session.Session)
+            name='session', spec=ipykernel.kernelbase.Session)
         r.redis_socket = MagicMock(name='socket', spec=socket.socket)
         r.redis_socket.recv.return_value = None
         r.connected = True
@@ -47,7 +47,7 @@ class TestKernel(object):
     # def test_connect_error(self):
         #r = RedisKernel()
         # this does not connect to the real redis and the is connected flag is false
-        #r.session = MagicMock(name='session', spec=IPython.kernel.zmq.session.Session)
+        #r.session = MagicMock(name='session', spec=ipykernel.kernelbase.Session)
         #r.redis_socket = MagicMock(name='socket', spec=socket.socket)
         #r.redis_socket.recv.return_value = None
         #response = r.do_execute('abracadabra',False)
@@ -56,35 +56,35 @@ class TestKernel(object):
     def test_normal_response(self):
         r = RedisKernel()
         r.session = MagicMock(
-            name='session', spec=IPython.kernel.zmq.session.Session)
+            name='session', spec=ipykernel.kernelbase.Session)
         response = r.do_execute('get a', False)
         assert response['status'] == 'ok'
 
     def test_error_response(self):
         r = RedisKernel()
         r.session = MagicMock(
-            name='session', spec=IPython.kernel.zmq.session.Session)
+            name='session', spec=ipykernel.kernelbase.Session)
         response = r.do_execute('get', False)
         assert response['status'] == 'ok'
 
     def test_string_response(self):
         r = RedisKernel()
         r.session = MagicMock(
-            name='session', spec=IPython.kernel.zmq.session.Session)
+            name='session', spec=ipykernel.kernelbase.Session)
         response = r.do_execute('set a 6', False)
         assert response['status'] == 'ok'
 
     def test_int_response(self):
         r = RedisKernel()
         r.session = MagicMock(
-            name='session', spec=IPython.kernel.zmq.session.Session)
+            name='session', spec=ipykernel.kernelbase.Session)
         response = r.do_execute('bitpos a 1', False)
         assert response['status'] == 'ok'
 
     def test_array_response(self):
         r = RedisKernel()
         r.session = MagicMock(
-            name='session', spec=IPython.kernel.zmq.session.Session)
+            name='session', spec=ipykernel.kernelbase.Session)
         response = r.do_execute('keys a*', False)
         assert response['status'] == 'ok'
 
@@ -100,7 +100,7 @@ class TestKernel(object):
     def test_do_complete(self):
         r = RedisKernel()
         r.session = MagicMock(
-            name='session', spec=IPython.kernel.zmq.session.Session)
+            name='session', spec=ipykernel.kernelbase.Session)
         response = r.do_complete('ge', 2)
         assert response['matches'].__len__() > 0
         assert response['status'] == 'ok'
@@ -108,7 +108,7 @@ class TestKernel(object):
     def test_tail_history(self):
         r = RedisKernel()
         r.session = MagicMock(
-            name='session', spec=IPython.kernel.zmq.session.Session)
+            name='session', spec=ipykernel.kernelbase.Session)
         response = r.do_execute('set a 6', False)
         r.execution_count += 1
         assert response['status'] == 'ok'
@@ -118,7 +118,7 @@ class TestKernel(object):
     def test_tail_history_partial(self):
         r = RedisKernel()
         r.session = MagicMock(
-            name='session', spec=IPython.kernel.zmq.session.Session)
+            name='session', spec=ipykernel.kernelbase.Session)
         response = r.do_execute('set c 6', False)
         r.execution_count += 1
         response = r.do_execute('set a 6', False)
@@ -131,7 +131,7 @@ class TestKernel(object):
     def test_tail_history_overflow(self):
         r = RedisKernel()
         r.session = MagicMock(
-            name='session', spec=IPython.kernel.zmq.session.Session)
+            name='session', spec=ipykernel.kernelbase.Session)
         response = r.do_execute('set a 6', False)
         r.execution_count += 1
         assert response['status'] == 'ok'
@@ -142,7 +142,7 @@ class TestKernel(object):
     def test_range_history(self):
         r = RedisKernel()
         r.session = MagicMock(
-            name='session', spec=IPython.kernel.zmq.session.Session)
+            name='session', spec=ipykernel.kernelbase.Session)
         response = r.do_execute('set a 6', False)
         r.execution_count += 1
         assert response['status'] == 'ok'
@@ -153,7 +153,7 @@ class TestKernel(object):
     def test_range_history_partial(self):
         r = RedisKernel()
         r.session = MagicMock(
-            name='session', spec=IPython.kernel.zmq.session.Session)
+            name='session', spec=ipykernel.kernelbase.Session)
         response = r.do_execute('set c 6', False)
         r.execution_count += 1
         response = r.do_execute('set a 6', False)
@@ -165,7 +165,7 @@ class TestKernel(object):
     def test_search_history(self):
         r = RedisKernel()
         r.session = MagicMock(
-            name='session', spec=IPython.kernel.zmq.session.Session)
+            name='session', spec=ipykernel.kernelbase.Session)
         response = r.do_execute('set a 6', False)
         r.execution_count += 1
         response = r.do_execute('get a', False)
@@ -178,7 +178,7 @@ class TestKernel(object):
     def test_search_history_pattern(self):
         r = RedisKernel()
         r.session = MagicMock(
-            name='session', spec=IPython.kernel.zmq.session.Session)
+            name='session', spec=ipykernel.kernelbase.Session)
         response = r.do_execute('set a 6', False)
         r.execution_count += 1
         response = r.do_execute('get a', False)

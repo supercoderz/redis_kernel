@@ -1,4 +1,1 @@
-{
-  "redis_kernel/test_kernel.py": true, 
-  "redis_kernel/test_parser.py": true
-}
+{}
